@@ -1,40 +1,50 @@
 #include <tunables/global>
 
 profile nrf52840_dfu_flasher flags=(attach_disconnected,mediate_deleted) {
+  # Base
   #include <abstractions/base>
 
-  network,
-
-  # --- allow s6 init and helpers ---
+  ## --- s6-overlay & shells ---
   /init rix,
-  /command/** mr,
+  /command/** rix,
 
-  # --- shells and common bins ---
-  /bin/** mr,
-  /sbin/** mr,
-  /usr/bin/** mr,
-  /usr/sbin/** mr,
+  /bin/** rix,
+  /sbin/** rix,
+  /usr/bin/** rix,
+  /usr/sbin/** rix,
+  /usr/local/bin/** rix,
+  /usr/local/sbin/** rix,
+  /lib/** mr,
+  /lib64/** mr,
   /usr/lib/** mr,
-  /usr/local/bin/** mr,
   /usr/local/lib/** mr,
 
-  # USB serial access
+  ## --- devices needed by init + serial ---
+  /dev/null rw,
+  /dev/urandom r,
+  /dev/tty r,
+  /dev/ptmx rw,
+  /dev/pts/** rw,
+
+  # USB serial devices
   /dev/ttyACM[0-9]* rw,
   /dev/ttyUSB[0-9]* rw,
 
-  # read system state
+  ## --- fs locations s6 & our scripts touch ---
+  /proc/** r,
   /sys/** r,
-  /run/** r,
-
-  # our scripts
-  /usr/bin/flash_nrfutil.sh mr,
-  /usr/bin/pick_asset.sh mr,
-
-  # working dirs
+  /run/** rwk,
   /tmp/** rwk,
   /data/** rwk,
   /share/** rwk,
 
-  # default deny for everything else
+  ## --- network (for fetching firmware) ---
+  network,
+
+  ## --- our scripts (read/exec permitted above already) ---
+  /usr/bin/flash_nrfutil.sh r,
+  /usr/bin/pick_asset.sh r,
+
+  ## Default deny everything else (no write/lock/execute)
   deny /** wklx,
 }
