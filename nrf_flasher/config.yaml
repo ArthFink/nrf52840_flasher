@@ -2,7 +2,7 @@ name: nRF52840 DFU Flasher (headless)
 slug: nrf52840_dfu_flasher
 version: "0.2.0"
 description: One-shot flasher for Nordic nRF52840 USB Dongle (PCA10059) via USB DFU using nrfutil.
-url: https://github.com/yourname/nrf52840_dfu_flasher
+url: https://github.com/ArthFink/nrf52840_flasher
 arch:
   - aarch64
   - amd64
