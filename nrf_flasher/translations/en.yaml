@@ -2,19 +2,20 @@ configuration:
   options:
     device:
       name: Device
-      description: Serial device (prefer /dev/serial/by-id/...).
+      description: The serial port where the nRF52840 dongle (PCA10059) is connected.
     baudrate:
       name: Bootloader Baudrate
-      description: Select the DFU serial speed.
+      description: The serial port baudrate used to communicate with the dongle in DFU mode.
     flow_control:
       name: Hardware flow control
       description: Enable hardware flow control for the serial port.
     firmware_source:
       name: Firmware URL / Source
-      description: github:owner/repo@tag|latest or url:https://... or file:/share/...
+      description: >
+        github:owner/repo@tag|latest, url:https://..., or file:/share/firmware.zip
     dry_run:
-      name: Verbose dry run
-      description: Show command but do not flash.
+      name: Dry run
+      description: Log the command but do not flash.
     verbose:
       name: Verbose mode
-      description: Extra logs during flashing.
+      description: Start flasher in verbose mode.
