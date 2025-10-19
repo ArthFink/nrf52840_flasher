@@ -21,7 +21,7 @@ devices:
   - /dev/ttyUSB1
 map:
   - share:rw
-apparmor: true
+apparmor: false
 
 options:
   device: "/dev/ttyACM0"        # recommend using /dev/serial/by-id/...
