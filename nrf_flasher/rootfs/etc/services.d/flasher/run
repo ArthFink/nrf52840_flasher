@@ -1,0 +1,32 @@
+#!/command/with-contenv bash
+set -euo pipefail
+LOG="[dfu]"
+
+OPTS="/data/options.json"
+DEVICE=$(jq -r '.device' "$OPTS")
+BAUD=$(jq -r '.baudrate' "$OPTS")
+FLOW=$(jq -r '.flow_control' "$OPTS")
+SOURCE=$(jq -r '.firmware_source' "$OPTS")
+DRY=$(jq -r '.dry_run' "$OPTS")
+VERBOSE=$(jq -r '.verbose' "$OPTS")
+
+LOGFILE="/share/nrf52840_dfu_flasher/flasher.log"
+mkdir -p "$(dirname "$LOGFILE")"
+: > "$LOGFILE"
+log(){ echo "$LOG $*"; echo "$(date -Iseconds) $LOG $*" >> "$LOGFILE"; }
+
+log "device=$DEVICE baud=$BAUD flow=$FLOW source=$SOURCE"
+
+if [ ! -e "$DEVICE" ]; then
+  log "Serial device not found: $DEVICE — put PCA10059 in DFU (press reset) and select the correct port."
+  exit 2
+fi
+
+ZIP_PATH=$(/usr/bin/pick_asset.sh "$SOURCE")
+log "using DFU package: $ZIP_PATH"
+
+/usr/bin/flash_nrfutil.sh "$ZIP_PATH" "$DEVICE" "$DRY" "$VERBOSE" "$BAUD" "$FLOW" \
+  && log "Flash completed" || { log "Flash failed"; exit 1; }
+
+log "Exiting (one-shot)."
+exit 0

@@ -1,0 +1,27 @@
+#include <tunables/global>
+
+profile nrf52840_dfu_flasher flags=(attach_disconnected,mediate_deleted) {
+  #include <abstractions/base>
+
+  network,
+
+  /dev/ttyACM[0-9]* rw,
+  /dev/ttyUSB[0-9]* rw,
+
+  /sys/** r,
+  /run/** r,
+
+  /usr/bin/** mr,
+  /usr/lib/** mr,
+  /usr/local/bin/** mr,
+  /usr/local/lib/** mr,
+
+  /usr/bin/flash_nrfutil.sh mr,
+  /usr/bin/pick_asset.sh mr,
+
+  /tmp/** rwk,
+  /data/** rwk,
+  /share/** rwk,
+
+  deny /** wklx,
+}

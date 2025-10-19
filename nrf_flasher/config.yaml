@@ -1,0 +1,38 @@
+name: nRF52840 DFU Flasher (headless)
+slug: nrf52840_dfu_flasher
+version: "0.2.0"
+description: One-shot flasher for Nordic nRF52840 USB Dongle (PCA10059) via USB DFU using nrfutil.
+url: https://github.com/yourname/nrf52840_dfu_flasher
+arch:
+  - aarch64
+  - amd64
+  - armv7
+init: false
+startup: once        # one-time run; add-on stops after flashing
+ingress: false
+panel_icon: mdi:chip
+stage: experimental
+
+devices:
+  - /dev/ttyACM0
+  - /dev/ttyACM1
+  - /dev/ttyUSB0
+  - /dev/ttyUSB1
+map:
+  - share:rw
+apparmor: true
+
+options:
+  device: "/dev/ttyACM0"        # recommend using /dev/serial/by-id/...
+  baudrate: 115200              # 57600 | 115200 | 230400 | 460800 | 921600
+  flow_control: false
+  firmware_source: "github:ArthFink/nrf52840-OpenThread@latest"  # DFU .zip
+  dry_run: false
+  verbose: true
+schema:
+  device: str
+  baudrate: int
+  flow_control: bool
+  firmware_source: str
+  dry_run: bool
+  verbose: bool

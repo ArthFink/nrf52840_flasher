@@ -1,0 +1,8 @@
+build_from:
+  aarch64: ghcr.io/home-assistant/aarch64-base:latest
+  amd64: ghcr.io/home-assistant/amd64-base:latest
+  armv7: ghcr.io/home-assistant/armv7-base:latest
+labels:
+  org.opencontainers.image.title: "nRF52840 DFU Flasher (Headless)"
+  org.opencontainers.image.description: "Flash Nordic nRF52840 USB Dongle (PCA10059) via USB DFU using nrfutil"
+  org.opencontainers.image.source: "https://github.com/yourname/nrf52840_dfu_flasher"
