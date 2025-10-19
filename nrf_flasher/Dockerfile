@@ -2,20 +2,25 @@
 ARG BUILD_FROM
 FROM $BUILD_FROM
 
-# Basics + Python + USB utils
-RUN apk add --no-cache bash curl jq udev usbutils coreutils python3 py3-pip
+# Basics + Python + USB utils + build deps for wheels
+RUN apk add --no-cache \
+      bash curl jq udev usbutils coreutils python3 py3-pip \
+      build-base libffi-dev openssl-dev
 
-# Create a venv and install nrfutil there (avoids PEP 668 error)
+# venv + legacy nrfutil (has 'dfu usb-serial')
 RUN python3 -m venv /opt/venv \
- && /opt/venv/bin/pip install --no-cache-dir nrfutil==7.* intelhex
+ && /opt/venv/bin/pip install --no-cache-dir nrfutil==5.2.0 intelhex
 
-# Make venv tools available
+# expose venv tools
 ENV PATH="/opt/venv/bin:${PATH}"
 
-# Add service + scripts
+# (optional) fail fast if dfu is missing
+RUN nrfutil --help | head -n 5 && nrfutil dfu --help | head -n 5
+
+# add service + scripts
 COPY rootfs/ /
 
-# Ensure executables
+# ensure executables
 RUN chmod +x \
       /etc/cont-init.d/10-prepare.sh \
       /etc/services.d/flasher/run \
